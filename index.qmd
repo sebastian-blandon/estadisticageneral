@@ -10,7 +10,7 @@ format:
   revealjs:
     auto-stretch: true
     scrollable: true
-    controls: auto
+    controls: true
     margin: 0.16
     self-contained: true
     chalkboard: false
@@ -214,37 +214,33 @@ library(kableExtra)
 ::: {.column width="25%"}
 **Módulo I (30%)**
 
-\- Informe análisis exploratorio (15%)
+\- Evaluación continua (50%)
 
-\- Parcial (10%)
-
-\- Actividades en clase (5%)
+\- Taller EDA (50%)
 :::
 
 ::: {.column width="25%"}
 **Módulo II (15%)**
 
-\- Parcial (10%)
+\- Evaluación continua (50%)
 
-\- Actividades en clase (5%)
+\- Taller de probabilidad (50%)
 :::
 
 ::: {.column width="25%"}
 **Módulo III (15%)**
 
-\- Parcial (10%)
+\- Evaluación continua (50%)
 
-\- Actividades en clase (5%)
+\- Taller de inferencia y pruebas de hipótesis (50%)
 :::
 
 ::: {.column width="25%"}
 **Módulo IV (40%)**
 
-\- Artículo científico (10%)
+\- Evaluación continua (50%)
 
-\- Parcial (25%)
-
-\- Actividades en clase (5%)
+\- Taller de regresión y muestreo (50%)
 :::
 :::
 
