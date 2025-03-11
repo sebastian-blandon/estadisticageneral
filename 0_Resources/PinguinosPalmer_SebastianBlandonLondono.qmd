@@ -1,0 +1,193 @@
+---
+title: "Informe estadístico - Pingüinos Palmer"
+subtitle: "<b> Asignatura: </b> II593 - Estadística General <br>
+          <b> Profesor: </b> Ing. Sebastián Blandón Londoño <br>
+          <b> Ofertada por: </b> Facultad de Ciencias Empresariales <br> 
+          Nombre del Programa Académico <br>
+          Nombre de la Facultad <br> 
+          <b> <i> Universidad Tecnológica de Pereira </i> </b>"
+author:
+  - name: Sebastián Blandón Londoño
+    email: s.blandon@utp.edu.co
+    url: https://www.linkedin.com/in/sebastian-blandon/
+date: today
+date-format: "DD/MM/YYYY"
+lang: es-CO
+theme:
+  light: journal
+  dark: darkly
+format:
+  html:
+    author-title: "Autor"
+    toc: true
+    toc_levels: 4
+    self-contained: true
+    code-fold: true
+    code-line-numbers: true
+    code-copy-button: true
+execute: 
+  warning: false
+---
+
+# Preparación
+## Carga de librerías
+```{r}
+library(palmerpenguins) # para cargar los datos de los pinguinos
+library(openxlsx) # para gestionar archivos de excel
+library(jsonlite) # para gestionar archivos json
+library(janitor) # para limpiar los nombres de las columnas
+library(dplyr) # para el operador pipe y transformar datos
+```
+
+
+## Carga de datos
+```{r}
+# 1. Usando la libreria
+datos_estadistica <- palmerpenguins::penguins_raw
+
+# 2. Usando archivo csv
+#datos_estadistica <- read.csv("Datos_Pinguinos.csv")
+
+# 3. Usando archivo de excel (xlsx)
+#datos_estadistica <- read.xlsx("Datos_Pinguinos.xlsx")
+
+# 4. Usando un archivo json
+#datos_estadistica <- read_json("Datos_Pinguinos.json")
+
+datos_estadistica <- datos_estadistica %>% 
+  clean_names() %>% 
+  rename(
+    delta_15N = delta_15_n_o_oo,
+    delta_13C = delta_13_c_o_oo
+  )
+
+# Esta es la forma sin usar pipe ( %>% )
+#datos_estadistica <- clean_names(dat = datos_estadistica)
+names(datos_estadistica)[names(datos_estadistica) == "delta_15_n_o_oo"] <- "delta_15N"
+names(datos_estadistica)[names(datos_estadistica) == "delta_13_c_o_oo"] <- "delta_13C"
+```
+
+
+# Análisis preliminar
+## Integridad de cada variable
+
+**species**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$species))```
+- Tipo de variable: ```r class(datos_estadistica$species)```
+
+**region**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$region))```
+- Tipo de variable: ```r class(datos_estadistica$region)```
+
+**island**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$island))```
+- Tipo de variable: ```r class(datos_estadistica$island)```
+
+**stage**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$stage))```
+- Tipo de variable: ```r class(datos_estadistica$stage)```
+
+**individual_id**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$individual_id))```
+- Tipo de variable: ```r class(datos_estadistica$individual_id)```
+
+**clutch_completion**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$clutch_completion))```
+- Tipo de variable: ```r class(datos_estadistica$clutch_completion)```
+
+**date_egg**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$date_egg))```
+- Tipo de variable: ```r class(datos_estadistica$date_egg)```
+
+**culmen_length_mm**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$culmen_length_mm))```
+- Tipo de variable: ```r class(datos_estadistica$culmen_length_mm)```
+
+**culmen_depth_mm**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$culmen_depth_mm))```
+- Tipo de variable: ```r class(datos_estadistica$culmen_depth_mm)```
+
+**flipper_length_mm**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$flipper_length_mm))```
+- Tipo de variable: ```r class(datos_estadistica$flipper_length_mm)```
+
+**body_mass_g**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$body_mass_g))```
+- Tipo de variable: ```r class(datos_estadistica$body_mass_g)```
+
+**sex**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$sex))```
+- Tipo de variable: ```r class(datos_estadistica$sex)```
+
+**delta_15N**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$delta_15N))```
+- Tipo de variable: ```r class(datos_estadistica$delta_15N)```
+
+**delta_13C**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$delta_13C))```
+- Tipo de variable: ```r class(datos_estadistica$delta_13C)```
+
+
+## Valores de cada variable
+
+### Variables "numeric"
+
+**individual_id**
+
+
+**culmen_length_mm**
+
+
+**culmen_depth_mm**
+
+
+**flipper_length_mm**
+
+
+**body_mass_g**
+
+
+**sex**
+
+
+**delta_15N**
+
+
+**delta_13C**
+
+### Variables "character"
+
+**species**
+
+
+**region**
+
+
+**island**
+
+
+**stage**
+
+
+**clutch_completion**
+
+
+**character**
+
+### Variables "date"
+
+**date_egg**
