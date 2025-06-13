@@ -37,6 +37,11 @@ library(openxlsx) # para gestionar archivos de excel
 library(jsonlite) # para gestionar archivos json
 library(janitor) # para limpiar los nombres de las columnas
 library(dplyr) # para el operador pipe y transformar datos
+library(skimr) # Resumen automatizado de datasets
+library(forcats) # para manipular variables categoricas
+library(lubridate) # para manipular fechas
+library(ggplot2) # para crear graficas
+library(glue) # para crear texto uniendo texto estatico con texto variable
 ```
 
 
@@ -146,11 +151,18 @@ names(datos_estadistica)[names(datos_estadistica) == "delta_13_c_o_oo"] <- "delt
 
 ### Variables "numeric"
 
-**individual_id**
-
-
 **culmen_length_mm**
 
+- Media: ```r round(mean(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2)```
+- Mediana: ```r round(median(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2)```
+- Mínimo: ```r round(min(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2)```
+- Máximo: ```r round(max(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2)```
+- Rango: ```r round(max(datos_estadistica$culmen_length_mm, na.rm = TRUE) - min(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits= 2)```
+- Varianza: ```r round(var(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2)```
+- Desviación estándar: ```r round(sd(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2)```
+- Q1: ```r quantile(datos_estadistica$culmen_length_mm, probs = 0.25, na.rm = TRUE)```
+- Q2: ```r quantile(datos_estadistica$culmen_length_mm, probs = 0.5, na.rm = TRUE)```
+- Q3: ```r quantile(datos_estadistica$culmen_length_mm, probs = 0.75, na.rm = TRUE)```
 
 **culmen_depth_mm**
 
@@ -161,8 +173,6 @@ names(datos_estadistica)[names(datos_estadistica) == "delta_13_c_o_oo"] <- "delt
 **body_mass_g**
 
 
-**sex**
-
 
 **delta_15N**
 
@@ -171,23 +181,93 @@ names(datos_estadistica)[names(datos_estadistica) == "delta_13_c_o_oo"] <- "delt
 
 ### Variables "character"
 
+**individual_id**
+
+**sex**
+
+- Valores únicos: ```r unique(datos_estadistica$sex)```
+
 **species**
 
+- Valores únicos: ```r unique(datos_estadistica$species)```
 
 **region**
 
+- Valores únicos: ```r unique(datos_estadistica$region)```
 
 **island**
 
+- Valores únicos: ```r unique(datos_estadistica$island)```
 
 **stage**
 
+- Valores únicos: ```r unique(datos_estadistica$stage)```
 
 **clutch_completion**
 
+- Valores únicos: ```r unique(datos_estadistica$clutch_completion)```
 
-**character**
 
 ### Variables "date"
 
 **date_egg**
+
+- Mínimo: ```r min(datos_estadistica$date_egg, na.rm = TRUE)```
+- Máximo: ```r max(datos_estadistica$date_egg, na.rm = TRUE)```
+
+
+## Resumen automatizado
+```{r}
+#datos_estadistica %>% 
+#  skim()
+
+skim(datos_estadistica)
+```
+
+## Indicar los tipos de variable
+```{r}
+datos_estadistica <- datos_estadistica %>% 
+  mutate(
+    study_name = as_factor(study_name),
+    sample_number = as_factor(sample_number),
+    species = as_factor(species),
+    region = as_factor(region),
+    island = as_factor(island),
+    stage = as_factor(stage),
+    individual_id = as_factor(individual_id),
+    clutch_completion = as_factor(clutch_completion),
+    date_egg = as_date(date_egg),
+    sex = as_factor(sex)
+  )
+```
+
+# Algunas gráficas
+
+## Cantidad de pingüinos por sexo
+```{r}
+resultado <- datos_estadistica %>% 
+  select(sex) %>% 
+  group_by(sex) %>% 
+  mutate(
+    conteo = 1
+  ) %>% 
+  summarise(
+    Qty = sum(conteo)
+  )
+
+version_palmer <- as.character(packageVersion("palmerpenguins"))
+
+ggplot(data = resultado, mapping = aes(x = sex, y = Qty))+
+  geom_bar(stat = "identity")+
+  labs(
+    title = "Cantidad de pingüinos por sexo",
+    subtitle = ifelse(abs(resultado$Qty[resultado$sex == "FEMALE"] - resultado$Qty[resultado$sex == "MALE"]) >= 20, "Hay diferencia notable entre la cantidad de pingüinos hembra y machos.", "No hay diferencia notable entre la cantidad de pingüinos hembra y machos."),
+    caption = glue("Fuente: librería palmerpenguins v. {version_palmer}")
+  )+
+  xlab("Sexo")+
+  ylab("Cantidad")
+```
+
+
+
+

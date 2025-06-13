@@ -1,0 +1,332 @@
+---
+title: "Informe estadístico - Pingüinos Palmer"
+subtitle: "<b> Asignatura: </b> II4D3 - Estadística I <br>
+          <b> Profesor: </b> Ing. Sebastián Blandón Londoño <br>
+          <b>Ofertada por: </b> Facultad de Ciencias Agrarias y Agroindustria <br>
+          Ingeniería En Procesos Agroindustriales <br>
+          Facultad de Mecanica Aplicada <br> 
+          <b> <i> Universidad Tecnológica de Pereira </i> </b>"
+author:
+  - name: Natalia Monroy Manzano
+    email: natalia.monroy@utp.edu.co
+    url: 
+date: today
+date-format: "YYYY/MM/DD"
+lang: es-CO
+theme: united
+format:
+  html:
+    author-title: "Autor"
+    toc: true
+    toc_levels: 4
+    self-contained: true
+    code-fold: true
+    code-line-numbers: true
+execute: 
+  warning: false
+---
+
+# Preparación 
+## Carga de librerías
+```{r}
+library(openxlsx) # para gestionar archivos de excel 
+library(janitor) # para limpiar 
+library(dplyr)  # para el operador pipe y transformar datos
+library(skimr) # resumen automatizado de datasets
+library(forcats) # Para manipular variables categóricas
+library(lubridate) # para marcar fechas
+```
+
+
+## Carga de datos 
+```{r}
+# 1 usando archivo xlsx
+datos_estadistica <- read.csv("Datos201.csv")
+
+datos_estadistica <- datos_estadistica %>% 
+  clean_names() %>% 
+  mutate(
+    fecha = dmy(fecha)
+  )
+```
+
+
+# Introducción
+
+Qué es dataset? De dónde descargaste? De qué habla? Qué encontraste? 
+
+# Anáisis preliminar 
+## integridad de cada variable 
+
+**species** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$species))```
+- tipo de variable:```r class(datos_estadistica$species)```
+
+**region** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$region))```
+- tipo de variable:```r class(datos_estadistica$region)```
+
+**island** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$island))```
+- tipo de variable:```r class(datos_estadistica$island)```
+
+**stage** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$stage))```
+- tipo de variable:```r class(datos_estadistica$stage)```
+
+**individual_id** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$individual_id))```
+- tipo de variable:```r class(datos_estadistica$individual_id)```
+
+**clutch_completion** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$clutch_completion))```
+- tipo de variable:```r class(datos_estadistica$clutch_completion)```
+
+**date_egg** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$date_egg))```
+- tipo de variable:```r class(datos_estadistica$date_egg)```
+
+**culmen_length_mm** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$culmen_length_mm))```
+- tipo de variable:```r class(datos_estadistica$culmen_length_mm)```
+
+**culmen_depth_mm** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$culmen_depth_mm))```
+- tipo de variable:```r class(datos_estadistica$culmen_depth_mm)```
+
+**culmen_depth_mm** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$culmen_depth_mm))```
+- tipo de variable:```r class(datos_estadistica$culmen_depth_mm)```
+
+**flipper_length_mm** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$flipper_length_mm))```
+- tipo de variable:```r class(datos_estadistica$flipper_length_mm)```
+
+**body_mass_g** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$body_mass_g))```
+- tipo de variable:```r class(datos_estadistica$body_mass_g)```
+
+**sex** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$sex))```
+- tipo de variable:```r class(datos_estadistica$sex)```
+
+**delta_15N** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$delta_15N))```
+- tipo de variable:```r class(datos_estadistica$delta_15N)```
+
+**delta_13C** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$delta_13C))```
+- tipo de variable:```r class(datos_estadistica$delta_13C)```
+
+**comments** 
+
+- Cantidad NA:```r sum(is.na(datos_estadistica$comments))```
+- tipo de variable:```r class(datos_estadistica$comments)```
+
+## Valores de cada variable
+
+### Variables "numeric"
+
+**culmen_length_mm**
+
+- Media: ```r round(mean(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2)``` 
+- Mediana: ```r round(median(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2)``` 
+- Minimo: ```r round(min(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2)``` 
+- Maximo: ```r round(max(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2)``` 
+- Rango: ```r round(max(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2) - round(min(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2)``` 
+- Varianza: ```r round(var(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2)```
+- Desviacion estandar: ```r round(sd(datos_estadistica$culmen_length_mm, na.rm = TRUE), digits = 2)```
+- 01: ```r quantile(datos_estadistica$culmen_length_mm, probs = 0.25, na.rm = TRUE)```
+- 02: ```r quantile(datos_estadistica$culmen_length_mm, probs = 0.5, na.rm = TRUE)```
+- 03:```r quantile(datos_estadistica$culmen_length_mm, probs = 0.75, na.rm = TRUE)```
+
+
+**culmen_depth_mm**
+
+- Media: ```r round(mean(datos_estadistica$culmen_depth_mm, na.rm = TRUE), digits = 2)``` 
+- Mediana: ```r round(median(datos_estadistica$culmen_depth_mm, na.rm = TRUE), digits = 2)``` 
+- Minimo: ```r round(min(datos_estadistica$culmen_depth_mm, na.rm = TRUE), digits = 2)``` 
+- Maximo: ```r round(max(datos_estadistica$culmen_depth_mm, na.rm = TRUE), digits = 2)``` 
+- Rango: ```r round(max(datos_estadistica$culmen_depth_mm, na.rm = TRUE), digits = 2) - round(min(datos_estadistica$culmen_depth_mm, na.rm = TRUE), digits = 2)``` 
+- Varianza: ```r round(var(datos_estadistica$culmen_depth_mm, na.rm = TRUE), digits = 2)```
+- Desviacion estandar: ```r round(sd(datos_estadistica$culmen_depth_mm, na.rm = TRUE), digits = 2)```
+- 01: ```r quantile(datos_estadistica$culmen_depth_mm, probs = 0.25, na.rm = TRUE)```
+- 02: ```r quantile(datos_estadistica$culmen_depth_mm, probs = 0.5, na.rm = TRUE)```
+- 03:```r quantile(datos_estadistica$culmen_depth_mm, probs = 0.75, na.rm = TRUE)```
+
+**flipper_length_mm**
+
+- Media: ```r round(mean(datos_estadistica$flipper_length_mm, na.rm = TRUE), digits = 2)``` 
+- Mediana: ```r round(median(datos_estadistica$flipper_length_mm, na.rm = TRUE), digits = 2)```
+- Minimo: ```r round(min(datos_estadistica$flipper_length_mm, na.rm = TRUE), digits = 2)``` 
+- Maximo: ```r round(max(datos_estadistica$flipper_length_mm, na.rm = TRUE), digits = 2)``` 
+- Rango: ```r round(max(datos_estadistica$flipper_length_mm, na.rm = TRUE), digits = 2) - round(min(datos_estadistica$flipper_length_mm, na.rm = TRUE), digits = 2)``` 
+- Varianza: ```r round(var(datos_estadistica$flipper_length_mm, na.rm = TRUE), digits = 2)```
+- Desviacion estandar: ```r round(sd(datos_estadistica$flipper_length_mm, na.rm = TRUE), digits = 2)```
+- 01: ```r quantile(datos_estadistica$flipper_length_mm, probs = 0.25, na.rm = TRUE)```
+- 02: ```r quantile(datos_estadistica$flipper_length_mm, probs = 0.5, na.rm = TRUE)```
+- 03:```r quantile(datos_estadistica$flipper_length_mm, probs = 0.75, na.rm = TRUE)```
+
+
+**body_mass_g**
+
+- Media: ```r round(mean(datos_estadistica$body_mass_g, na.rm = TRUE), digits = 2)``` 
+- Mediana: ```r round(median(datos_estadistica$body_mass_g, na.rm = TRUE), digits = 2)``` 
+- Minimo: ```r round(min(datos_estadistica$body_mass_g, na.rm = TRUE), digits = 2)``` 
+- Maximo: ```r round(max(datos_estadistica$body_mass_g, na.rm = TRUE), digits = 2)``` 
+- Rango: ```r round(max(datos_estadistica$body_mass_g, na.rm = TRUE), digits = 2) - round(min(datos_estadistica$body_mass_g, na.rm = TRUE), digits = 2)``` 
+- Varianza: ```r round(var(datos_estadistica$body_mass_g, na.rm = TRUE), digits = 2)```
+- Desviacion estandar: ```r round(sd(datos_estadistica$body_mass_g, na.rm = TRUE), digits = 2)```
+- 01: ```r quantile(datos_estadistica$body_mass_g, probs = 0.25, na.rm = TRUE)```
+- 02: ```r quantile(datos_estadistica$body_mass_g, probs = 0.5, na.rm = TRUE)```
+- 03:```r quantile(datos_estadistica$body_mass_g, probs = 0.75, na.rm = TRUE)```
+
+
+**delta_15N**
+
+- Media: ```r round(mean(datos_estadistica$delta_15N, na.rm = TRUE), digits = 2)``` 
+- Mediana: ```r round(median(datos_estadistica$delta_15N, na.rm = TRUE), digits = 2)``` 
+- Minimo: ```r round(min(datos_estadistica$delta_15N, na.rm = TRUE), digits = 2)``` 
+- Maximo: ```r round(max(datos_estadistica$delta_15N, na.rm = TRUE), digits = 2)``` 
+- Rango: ```r round(max(datos_estadistica$delta_15N, na.rm = TRUE), digits = 2) - round(min(datos_estadistica$delta_15N, na.rm = TRUE), digits = 2)``` 
+- Varianza: ```r round(var(datos_estadistica$delta_15N, na.rm = TRUE), digits = 2)```
+- Desviacion estandar: ```r round(sd(datos_estadistica$delta_15N, na.rm = TRUE), digits = 2)```
+- 01: ```r quantile(datos_estadistica$delta_15N, probs = 0.25, na.rm = TRUE)```
+- 02: ```r quantile(datos_estadistica$delta_15N, probs = 0.5, na.rm = TRUE)```
+- 03:```r quantile(datos_estadistica$delta_15N, probs = 0.75, na.rm = TRUE)```
+
+
+**delta_13C**
+
+- Media: ```r round(mean(datos_estadistica$delta_13C, na.rm = TRUE), digits = 2)``` 
+- Mediana: ```r round(median(datos_estadistica$delta_13C, na.rm = TRUE), digits = 2)``` 
+- Minimo: ```r round(min(datos_estadistica$delta_13C, na.rm = TRUE), digits = 2)``` 
+- Maximo: ```r round(max(datos_estadistica$delta_13C, na.rm = TRUE), digits = 2)``` 
+- Rango: ```r round(max(datos_estadistica$delta_13C, na.rm = TRUE), digits = 2) - round(min(datos_estadistica$delta_13C, na.rm = TRUE), digits = 2)``` 
+- Varianza: ```r round(var(datos_estadistica$delta_13C, na.rm = TRUE), digits = 2)```
+- Desviacion estandar: ```r round(sd(datos_estadistica$delta_13C, na.rm = TRUE), digits = 2)```
+- 01: ```r quantile(datos_estadistica$delta_13C, probs = 0.25, na.rm = TRUE)```
+- 02: ```r quantile(datos_estadistica$delta_13C, probs = 0.5, na.rm = TRUE)```
+- 03:```r quantile(datos_estadistica$delta_13C, probs = 0.75, na.rm = TRUE)```
+
+### Variables "character"
+
+**individual_id**
+
+- Valores unicos: ```r unique(datos_estadistica$individual_id)```
+
+**species**
+
+- Valores unicos: ```r unique(datos_estadistica$species)```
+
+**sex**
+
+- Valores unicos: ```r unique(datos_estadistica$sex)```
+
+
+**region**
+
+- Valores unicos: ```r unique(datos_estadistica$region)```
+
+
+**island**
+
+- Valores unicos: ```r unique(datos_estadistica$island)```
+
+
+**stage**
+
+- Valores unicos: ```r unique(datos_estadistica$stage)```
+
+
+**clutch_completion**
+
+- Valores unicos: ```r unique(datos_estadistica$clutch_completion)```
+
+
+**character**
+
+- Valores unicos: ```r unique(datos_estadistica$character)```
+
+### Variables "date"
+
+**date_egg**
+
+- Minimo: ```r min(datos_estadistica$date_egg, na.rm = TRUE)```
+- Maximo: ```r max(datos_estadistica$date_egg, na.rm = TRUE)```
+
+## Resumen Automatizado 
+```{r}
+datos_estadistica %>% 
+  skim()
+```
+
+
+## Indicar los tipos de variables
+```{r}
+datos_estadistica <- datos_estadistica %>%
+  mutate(
+    study_name = as_factor(study_name), 
+    sample_number = as_factor(sample_number),
+    species = as_factor(species),
+    region = as_factor(region),
+    island = as_factor(island),
+    stage = as_factor(stage),
+    individual_id = as_factor(individual_id),
+    clutch_completion = factor(clutch_completion),
+    date_egg = as.Date(date_egg),
+    sex = as_factor(sex)
+  )
+    
+```
+
+
+# Algunas Gráficas
+
+## Cantidad de pinguinos por sexo
+
+```{r}
+  resultado <-datos_estadistica %>%
+  select(sex) %>%
+  group_by(sex) %>%
+  mutate(
+    conteo = 1
+    
+  ) %>%
+  summarise(
+    qty = sum(conteo)
+  )
+
+version_palmer <- 
+as.character(packageVersion("palmerpenguins"))
+
+
+ggplot(data = resultado, mapping = aes(x = sex, y = qty))+
+  geom_bar(stat = "identity")+
+  labs(
+    title = "Cantidad de pingüinos por sexo",
+    subtitle = ifelse(abs(resultado$qty[resultado$sex == "FEMALE"] - resultado$qty[resultado$sex == "MALE"]) >= 20,  
+                      "Hay una diferencia notable entre la cantidad de pingüinos hembra y machos.",
+                      "No hay una diferencia notable entre la cantidad de pingüinos hembra y machos."),
+    caption = glue('Fuente: librería palmerpenguins v. {version_palmer}')
+  )+
+  xlab("Sexo") + 
+  ylab("Cantidad")
+```
+    
+

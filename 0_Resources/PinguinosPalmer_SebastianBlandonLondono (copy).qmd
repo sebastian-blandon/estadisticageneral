@@ -1,0 +1,387 @@
+---
+title: "Informe estadístico - Pingüinos Palmer"
+subtitle: "<b> Asignatura: </b> II4D3 - Estadística I <br>
+          <b> Profesor: </b> Ing. Sebastián Blandón Londoño <br>
+          Nombre del Programa Académico <br>
+          Facultad de Ciencias Empresariales <br> 
+          <b> <i> Universidad Tecnológica de Pereira </i> </b>"
+author:
+  - name: Sebastián Blandón Londoño
+    email: s.blandon@utp.edu.co
+    url: https://www.linkedin.com/in/sebastian-blandon/
+date: today
+date-format: "DD/MM/YYYY"
+lang: es-CO
+theme:
+  light: journal
+  dark: darkly
+format:
+  html:
+    author-title: "Autor"
+    toc: true
+    toc_levels: 4
+    self-contained: true
+    code-fold: true
+    code-line-numbers: true
+    code-copy-button: true
+execute: 
+  warning: false
+  echo: true
+---
+
+# Preparación
+## Carga de librerías
+```{r}
+library(palmerpenguins) # para cargar los datos de los pinguinos
+library(openxlsx) # para gestionar archivos de excel
+library(jsonlite) # para gestionar archivos json
+library(janitor) # para limpiar los nombres de las columnas
+library(dplyr) # para el operador pipe y transformar datos. Hace parte del tidyverse
+library(skimr) # Resumen automatizado de datasets
+library(ggplot2) # para hacer graficas. Hace parte del tidyverse
+library(forcats) # para manejar factores (Variables categoricas)
+library(glue) # para pegar texto con variables
+```
+
+
+## Carga de datos
+```{r}
+# 1. Usando la libreria
+datos_estadistica <- palmerpenguins::penguins_raw
+
+# 2. Usando archivo csv
+#datos_estadistica <- read.csv("Datos_Pinguinos.csv")
+
+# 3. Usando archivo de excel (xlsx)
+#datos_estadistica <- read.xlsx("Datos_Pinguinos.xlsx")
+
+# 4. Usando un archivo json
+#datos_estadistica <- read_json("Datos_Pinguinos.json")
+
+datos_estadistica <- datos_estadistica %>% 
+  clean_names() %>% 
+  rename(
+    delta_15N = delta_15_n_o_oo,
+    delta_13C = delta_13_c_o_oo
+  )
+
+# Esta es la forma sin usar pipe ( %>% )
+#datos_estadistica <- clean_names(dat = datos_estadistica)
+names(datos_estadistica)[names(datos_estadistica) == "delta_15_n_o_oo"] <- "delta_15N"
+names(datos_estadistica)[names(datos_estadistica) == "delta_13_c_o_oo"] <- "delta_13C"
+```
+
+
+# Análisis preliminar
+## Integridad de cada variable
+
+**species**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$species))```
+- Tipo de variable: ```r class(datos_estadistica$species)```
+
+**region**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$region))```
+- Tipo de variable: ```r class(datos_estadistica$region)```
+
+**island**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$island))```
+- Tipo de variable: ```r class(datos_estadistica$island)```
+
+**stage**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$stage))```
+- Tipo de variable: ```r class(datos_estadistica$stage)```
+
+**individual_id**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$individual_id))```
+- Tipo de variable: ```r class(datos_estadistica$individual_id)```
+
+**clutch_completion**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$clutch_completion))```
+- Tipo de variable: ```r class(datos_estadistica$clutch_completion)```
+
+**date_egg**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$date_egg))```
+- Tipo de variable: ```r class(datos_estadistica$date_egg)```
+
+**culmen_length_mm**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$culmen_length_mm))```
+- Tipo de variable: ```r class(datos_estadistica$culmen_length_mm)```
+
+**culmen_depth_mm**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$culmen_depth_mm))```
+- Tipo de variable: ```r class(datos_estadistica$culmen_depth_mm)```
+
+**flipper_length_mm**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$flipper_length_mm))```
+- Tipo de variable: ```r class(datos_estadistica$flipper_length_mm)```
+
+**body_mass_g**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$body_mass_g))```
+- Tipo de variable: ```r class(datos_estadistica$body_mass_g)```
+
+**sex**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$sex))```
+- Tipo de variable: ```r class(datos_estadistica$sex)```
+
+**delta_15N**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$delta_15N))```
+- Tipo de variable: ```r class(datos_estadistica$delta_15N)```
+
+**delta_13C**
+
+- Cantidad NA: ```r sum(is.na(datos_estadistica$delta_13C))```
+- Tipo de variable: ```r class(datos_estadistica$delta_13C)```
+
+
+## Valores de cada variable
+
+### Variables "numeric"
+
+**culmen_depth_mm**
+
+- Cantidad de observaciones: ```r sum(!is.na(datos_estadistica$culmen_depth_mm))```
+- Media: ```r mean(datos_estadistica$culmen_depth_mm, na.rm = TRUE)```
+- Mediana: ```r median(datos_estadistica$culmen_depth_mm, na.rm = TRUE)```
+- Máximo: ```r max(datos_estadistica$culmen_depth_mm, na.rm = TRUE)```
+- Mínimo: ```r min(datos_estadistica$culmen_depth_mm, na.rm = TRUE)```
+- Rango: ```r max(datos_estadistica$culmen_depth_mm, na.rm = TRUE) - min(datos_estadistica$culmen_depth_mm, na.rm = TRUE)```
+- Varianza: ```r var(datos_estadistica$culmen_depth_mm, na.rm = TRUE)```
+- Desviación estándar: ```r sd(datos_estadistica$culmen_depth_mm, na.rm = TRUE)```
+- Q1 (25%): ```r quantile(datos_estadistica$culmen_depth_mm, probs = 0.25, na.rm = TRUE)```
+- Q2 (50%): ```r quantile(datos_estadistica$culmen_depth_mm, probs = 0.5, na.rm = TRUE)```
+- Q3 (75%): ```r quantile(datos_estadistica$culmen_depth_mm, probs = 0.75, na.rm = TRUE)```
+
+**flipper_length_mm**
+
+- Cantidad de observaciones: ```r sum(!is.na(datos_estadistica$flipper_length_mm))```
+- Media: ```r mean(datos_estadistica$flipper_length_mm, na.rm = TRUE)```
+- Mediana: ```r median(datos_estadistica$flipper_length_mm, na.rm = TRUE)```
+- Máximo: ```r max(datos_estadistica$flipper_length_mm, na.rm = TRUE)```
+- Mínimo: ```r min(datos_estadistica$flipper_length_mm, na.rm = TRUE)```
+- Rango: ```r max(datos_estadistica$flipper_length_mm, na.rm = TRUE) - min(datos_estadistica$flipper_length_mm, na.rm = TRUE)```
+- Varianza: ```r var(datos_estadistica$flipper_length_mm, na.rm = TRUE)```
+- Desviación estándar: ```r sd(datos_estadistica$flipper_length_mm, na.rm = TRUE)```
+- Q1 (25%): ```r quantile(datos_estadistica$flipper_length_mm, probs = 0.25, na.rm = TRUE)```
+- Q2 (50%): ```r quantile(datos_estadistica$flipper_length_mm, probs = 0.5, na.rm = TRUE)```
+- Q3 (75%): ```r quantile(datos_estadistica$flipper_length_mm, probs = 0.75, na.rm = TRUE)```
+
+**body_mass_g**
+
+- Cantidad de observaciones: ```r sum(!is.na(datos_estadistica$body_mass_g))```
+- Media: ```r mean(datos_estadistica$body_mass_g, na.rm = TRUE)```
+- Mediana: ```r median(datos_estadistica$body_mass_g, na.rm = TRUE)```
+- Máximo: ```r max(datos_estadistica$body_mass_g, na.rm = TRUE)```
+- Mínimo: ```r min(datos_estadistica$body_mass_g, na.rm = TRUE)```
+- Rango: ```r max(datos_estadistica$body_mass_g, na.rm = TRUE) - min(datos_estadistica$body_mass_g, na.rm = TRUE)```
+- Varianza: ```r var(datos_estadistica$body_mass_g, na.rm = TRUE)```
+- Desviación estándar: ```r sd(datos_estadistica$body_mass_g, na.rm = TRUE)```
+- Q1 (25%): ```r quantile(datos_estadistica$body_mass_g, probs = 0.25, na.rm = TRUE)```
+- Q2 (50%): ```r quantile(datos_estadistica$body_mass_g, probs = 0.5, na.rm = TRUE)```
+- Q3 (75%): ```r quantile(datos_estadistica$body_mass_g, probs = 0.75, na.rm = TRUE)```
+
+**delta_15N**
+
+- Cantidad de observaciones: ```r sum(!is.na(datos_estadistica$delta_15N))```
+- Media: ```r mean(datos_estadistica$delta_15N, na.rm = TRUE)```
+- Mediana: ```r median(datos_estadistica$delta_15N, na.rm = TRUE)```
+- Máximo: ```r max(datos_estadistica$delta_15N, na.rm = TRUE)```
+- Mínimo: ```r min(datos_estadistica$delta_15N, na.rm = TRUE)```
+- Rango: ```r max(datos_estadistica$delta_15N, na.rm = TRUE) - min(datos_estadistica$delta_15N, na.rm = TRUE)```
+- Varianza: ```r var(datos_estadistica$delta_15N, na.rm = TRUE)```
+- Desviación estándar: ```r sd(datos_estadistica$delta_15N, na.rm = TRUE)```
+- Q1 (25%): ```r quantile(datos_estadistica$delta_15N, probs = 0.25, na.rm = TRUE)```
+- Q2 (50%): ```r quantile(datos_estadistica$delta_15N, probs = 0.5, na.rm = TRUE)```
+- Q3 (75%): ```r quantile(datos_estadistica$delta_15N, probs = 0.75, na.rm = TRUE)```
+
+**delta_13C**
+
+- Cantidad de observaciones: ```r sum(!is.na(datos_estadistica$delta_13C))```
+- Media: ```r mean(datos_estadistica$delta_13C, na.rm = TRUE)```
+- Mediana: ```r median(datos_estadistica$delta_13C, na.rm = TRUE)```
+- Máximo: ```r max(datos_estadistica$delta_13C, na.rm = TRUE)```
+- Mínimo: ```r min(datos_estadistica$delta_13C, na.rm = TRUE)```
+- Rango: ```r max(datos_estadistica$delta_13C, na.rm = TRUE) - min(datos_estadistica$delta_13C, na.rm = TRUE)```
+- Varianza: ```r var(datos_estadistica$delta_13C, na.rm = TRUE)```
+- Desviación estándar: ```r sd(datos_estadistica$delta_13C, na.rm = TRUE)```
+- Q1 (25%): ```r quantile(datos_estadistica$delta_13C, probs = 0.25, na.rm = TRUE)```
+- Q2 (50%): ```r quantile(datos_estadistica$delta_13C, probs = 0.5, na.rm = TRUE)```
+- Q3 (75%): ```r quantile(datos_estadistica$delta_13C, probs = 0.75, na.rm = TRUE)```
+
+### Variables "character"
+
+**sex**
+
+- Valores únicos: ```r unique(datos_estadistica$sex)```
+
+**species**
+
+- Valores únicos: ```r unique(datos_estadistica$species)```
+
+**region**
+
+- Valores únicos: ```r unique(datos_estadistica$region)```
+
+**island**
+
+- Valores únicos: ```r unique(datos_estadistica$island)```
+
+**stage**
+
+- Valores únicos: ```r unique(datos_estadistica$stage)```
+
+**clutch_completion**
+
+- Valores únicos: ```r unique(datos_estadistica$clutch_completion)```
+
+
+### Variables "date"
+
+**date_egg**
+
+- Fecha máxima: ```r max(datos_estadistica$date_egg, na.rm = TRUE)```
+- Fecha mínima: ```r min(datos_estadistica$date_egg, na.rm = TRUE)```
+- Fecha mediana: ```r median(datos_estadistica$date_egg, na.rm = TRUE)```
+
+## Resumen automatizado
+```{r}
+skim(datos_estadistica)
+```
+
+## Definir el tipo de cada variable
+```{r}
+datos_estadistica <- datos_estadistica %>% 
+  mutate(
+    study_name = as_factor(study_name),
+    species = as_factor(species),
+    region = as_factor(region),
+    island = as_factor(island),
+    stage = as_factor(stage),
+    individual_id = as_factor(individual_id),
+    clutch_completion = as_factor(clutch_completion),
+    sex = as_factor(sex)
+  )
+```
+
+
+# Algunas preguntas...
+
+
+## ¿Cuáles son las especies de pingüinos incluidas en el estudio? ¿Cuántas especies hay?
+
+En total, hay ```r length(unique(datos_estadistica$species))``` especies diferentes, las cuales son: ```r head(unique(datos_estadistica$species), 2)```, y ```r tail(unique(datos_estadistica$species), 1)```.
+
+## ¿Hay una diferencia significativa en la longitud del pico entre machos y hembras?
+
+```{r}
+datos_estadistica %>% 
+  ggplot(aes(x = sex, y = culmen_length_mm))+
+  geom_boxplot() +
+  labs(
+    x = "Sexo",
+    y = "Longitud del pico (mm)"
+  )+
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+```{r}
+datos_estadistica %>% 
+  filter(!is.na(sex)) %>% 
+  ggplot(aes(x = sex, y = culmen_length_mm))+
+  geom_boxplot() +
+  labs(
+    x = "Sexo",
+    y = "Longitud del pico (mm)"
+  )+
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+
+
+## ¿Cuáles son las islas donde se aplicó el estudio?
+
+**Opción 1:** El estudio de los "Pingüinos Palmer" fue aplicado en las islas ```r unique(datos_estadistica$island)```.
+
+**Opción 2:** El estudio de los "Pingüinos Palmer" fue aplicado en las islas ```r head(unique(datos_estadistica$island), 2)```, y ```r tail(unique(datos_estadistica$island), 1)```.
+
+**Opción 3:** El estudio de los "Pingüinos Palmer" fue aplicado en las islas ```r head(unique(datos_estadistica$island), length(unique(datos_estadistica$island))-1)```, y ```r tail(unique(datos_estadistica$island), 1)```.
+
+
+## ¿Cuántos pingüinos tienen exactamente la misma masa corporal?
+
+
+
+## ¿En cuál isla está la hembra con el pico más corto?
+
+```{r}
+respuesta <- datos_estadistica %>% 
+  filter(sex == "FEMALE") %>% 
+  group_by(island) %>% 
+  summarise(
+    culmen_length_mm = min(culmen_length_mm)
+  )
+```
+
+La hembra con pico más corto está en la isla ```r respuesta$island[respuesta$culmen_length_mm == min(respuesta$culmen_length_mm, na.rm = TRUE)]```, y tiene ```r respuesta$culmen_length_mm[respuesta$culmen_length_mm == min(respuesta$culmen_length_mm, na.rm = TRUE)]``` mm de longitud.
+
+
+## ¿En cuál isla están las hembras con el pico más corto?
+
+```{r}
+respuesta <- datos_estadistica %>% 
+  filter(sex == "FEMALE") %>% 
+  group_by(island) %>% 
+  summarise(
+    culmen_length_mm = mean(culmen_length_mm, na.rm = TRUE)
+  )
+```
+
+Las hembras con el pico más corto están en la isla ```r respuesta$island[respuesta$culmen_length_mm == min(respuesta$culmen_length_mm)]```, con una longitud promedio de ```r round(respuesta$culmen_length_mm[respuesta$culmen_length_mm == min(respuesta$culmen_length_mm)], digits = 2)```mm.
+
+
+## ¿Cuál especie pesa más?
+
+
+# Algunas gráficas
+
+## Cantidad de pingüinos por sexo
+```{r}
+respuesta <- datos_estadistica %>%
+  group_by(sex) %>%
+  mutate(
+    contar = 1
+    ) %>%
+  summarise(qty = sum(contar)
+  )
+
+version_palmer <- as.character(packageVersion("palmerpenguins"))
+
+ggplot(data = respuesta, aes(x = sex, y = qty)) + 
+  geom_bar(stat = "identity")+
+  labs(
+    title = "Cantidad de pingüinos por sexo",
+    caption = glue("Fuente: librería palmerpenguins v.", {version_palmer})
+  )
+```
+
+
+
+
+
+
